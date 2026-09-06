@@ -55,6 +55,13 @@ async def async_attach_trigger(
             # from the WhatsApp group JID.
             if not group_id:
                 group_id = to
+        elif sender and sender.endswith("@g.us"):
+            is_group = True
+
+            # If groupId wasn't supplied by the bridge, derive it
+            # from the WhatsApp group JID.
+            if not group_id:
+                group_id = to
 
         # Check sender (from_number)
         if from_number:
