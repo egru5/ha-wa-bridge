@@ -39,6 +39,15 @@ async def async_attach_trigger(
         chat_name = data.get("chatName")
         group_id = data.get("groupId")
         is_group = data.get("isGroup", False)
+        author = data.get("author")
+
+        if sender and sender.endswith("@g.us"):
+            is_group = True
+            group_id = group_id or sender
+
+        # "author" is the actual sender inside a group
+        if is_group and author:
+            sender = author
 
         # WhatsApp sends own messages in groups with:
         #   from: <own-lid>
@@ -73,7 +82,7 @@ async def async_attach_trigger(
             if not is_group:
                 return
 
-            if not group_id:
+            if not group_id or from_group_id not in group_id:
                 return
 
             # Accept both:
